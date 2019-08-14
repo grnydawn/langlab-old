@@ -56,7 +56,7 @@ lint: ## check style with flake8
 	flake8 ${NAME} tests
 
 test: ## run tests quickly with the default Python
-	python setup.py test
+	pyloco test test_langlab.py
 
 test-all: ## run tests on every Python version with tox
 	tox

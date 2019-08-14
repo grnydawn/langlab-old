@@ -16,7 +16,6 @@ def main():
         author_email=mgr.get("_author_email_", None),
         license=mgr.get("_license_", None),
         packages=find_packages(),
-        test_suite="tests.langlab_unittest_suite",
         install_requires=["pyloco"],
         url=mgr.get("_url_", None),
         entry_points={
