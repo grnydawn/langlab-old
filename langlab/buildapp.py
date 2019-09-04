@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from pyloco import Task
+from pyloco import Task, system
 
 class BuildApp(Task):
     "create an application through compilation and linking"
@@ -10,12 +10,14 @@ class BuildApp(Task):
 
     def __init__(self, parent):
 
-        self.add_data_argument("data", type=str, help="input data")
+        self.add_data_argument("command", type=str, help="command to build an app.")
 
-        self.register_forward("data", type=str, help="output data")
+        self.register_forward("retval", type=str, help="return value")
+        self.register_forward("stdout", type=str, help="standard output")
+        self.register_forward("stderr", type=str, help="standard error")
 
     def perform(self, targs):
 
-        output = targs.data
+        ret, out, err = system(targs.command)
 
-        self.add_forward(data=output)
+        self.add_forward(retval=ret, stdout=out, stderr=err)
