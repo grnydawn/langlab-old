@@ -16,7 +16,7 @@ def main():
         author_email=mgr.get("_author_email_", None),
         license=mgr.get("_license_", None),
         packages=find_packages(),
-        install_requires=["pyloco"],
+        install_requires=["pyloco", "pcpp"],
         url=mgr.get("_url_", None),
         classifiers=[
             'Intended Audience :: Developers',

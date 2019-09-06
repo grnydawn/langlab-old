@@ -2,15 +2,15 @@
 
 from pyloco import Task, system
 
-class BuildApp(Task):
-    "create an application through compilation and linking"
+class RunApp(Task):
+    "execute an application"
 
-    _name_ = "buildapp"
+    _name_ = "run"
     _version_ = "0.1.0"
 
     def __init__(self, parent):
 
-        self.add_data_argument("command", type=str, help="command to build an app.")
+        self.add_data_argument("command", type=str, help="command to run an app.")
 
         self.add_option_argument("--cwd", type=str, help="working directory.")
 

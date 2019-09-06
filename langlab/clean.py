@@ -2,15 +2,15 @@
 
 from pyloco import Task, system
 
-class RunApp(Task):
-    "execute an application"
+class CleanApp(Task):
+    "clean intermittent files generated during compiling an application"
 
-    _name_ = "runapp"
+    _name_ = "clean"
     _version_ = "0.1.0"
 
     def __init__(self, parent):
 
-        self.add_data_argument("command", type=str, help="command to run an app.")
+        self.add_data_argument("command", type=str, help="command to clean an app.")
 
         self.add_option_argument("--cwd", type=str, help="working directory.")
 
