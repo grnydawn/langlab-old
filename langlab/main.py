@@ -2,7 +2,7 @@ import pyloco
 
 class LangLab(pyloco.Manager):
     _name_ = "langlab"
-    _version_ = "0.1.0"
+    _version_ = "0.1.1"
     _description_ = "Programming Language Laboratory"
     _long_description_ = """langlab : A base package for multiple programming language research tools.
 """
