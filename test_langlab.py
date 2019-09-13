@@ -61,7 +61,7 @@ class TaskLangLabTests(pyloco.TestCase):
                 "--cwd", cwd.path,
             ]
 
-            ret, fwd = langlab.perform("buildapp", argv=argv)
+            ret, fwd = langlab.perform("build", argv=argv)
             self.assertEqual(ret, 0)
             self.assertEqual(fwd["stdout"], "")
             self.assertEqual(fwd["stderr"], "")
@@ -71,7 +71,7 @@ class TaskLangLabTests(pyloco.TestCase):
                 "--cwd", cwd.path,
             ]
 
-            ret, fwd = langlab.perform("runapp", argv=argv)
+            ret, fwd = langlab.perform("run", argv=argv)
             self.assertEqual(ret, 0)
             self.assertEqual(fwd["stdout"], greeting)
             self.assertEqual(fwd["stderr"], "")
@@ -81,11 +81,16 @@ class TaskLangLabTests(pyloco.TestCase):
                 "--cwd", cwd.path,
             ]
 
-            ret, fwd = langlab.perform("runapp", argv=argv)
+            ret, fwd = langlab.perform("clean", argv=argv)
             self.assertEqual(ret, 0)
             self.assertEqual(fwd["stdout"], "")
             self.assertEqual(fwd["stderr"], "")
 
             self.assertTrue(not os.path.isfile(self.outpath))
+
+    def test_tree(self):
+
+        from langlab.tree import Tree, Node
+
 
 test_classes = (TaskLangLabTests,)

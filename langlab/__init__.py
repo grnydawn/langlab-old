@@ -4,3 +4,4 @@ main = LangLab.main
 perform = LangLab.perform
 
 from .util import which, tempdir, workdir
+from .tree import Tree, Node, toast, Proxy
