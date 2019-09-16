@@ -13,6 +13,7 @@ class BuildApp(Task):
         self.add_data_argument("command", type=str, help="command to build an app.")
 
         self.add_option_argument("--cwd", type=str, help="working directory.")
+        self.add_option_argument("--keep", type=str, help="file to keep.")
 
         self.register_forward("retval", type=int, help="return value")
         self.register_forward("stdout", type=str, help="standard output")
