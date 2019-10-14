@@ -11,19 +11,27 @@ import langlab
 
 here, myname = os.path.split(__file__)
 
-greeting = "Hello, World!"
+res_in = """
+static const char number_message[] = "Input number is %d!";
+"""
 
-helloworld_c = """/* helloworld.c test program */
+number_c = """/* number.c test program */
 #include <stdio.h>
+#include <res.in>
+
 int main()
 {
-   printf("%s");
+   printf(number_message, NUMBER);
    return 0;
 }
-""" % greeting
+"""
 
-srcname = "helloworld"
+srcname = "number"
 srcfile = srcname + ".c"
+
+resname = "res"
+resfile = resname + ".in"
+
 outfile = srcname + ".exe"
 
 class TaskLangLabTests(pyloco.TestCase):
@@ -42,11 +50,22 @@ class TaskLangLabTests(pyloco.TestCase):
 
         assert self.gcc is not None
         self.tempdir = tempfile.mkdtemp()
+
         self.srcpath = os.path.join(self.tempdir, srcfile)
-        self.outpath = os.path.join(self.tempdir, outfile)
 
         with open(self.srcpath, "w") as fsrc:
-            fsrc.write(helloworld_c)
+            fsrc.write(number_c)
+
+        self.resdir = os.path.join(self.tempdir, "resource")
+        self.respath = os.path.join(self.resdir, resfile)
+        os.makedirs(self.resdir)
+
+        with open(self.respath, "w") as frsc:
+            frsc.write(res_in)
+
+        self.outpath = os.path.join(self.tempdir, outfile)
+        self.command = ("%s -v -o %s %s -D NUMBER=1 -I %s" %
+                        ("gcc", self.outpath, self.srcpath, self.resdir))
 
     def tearDown(self):
 
@@ -57,7 +76,7 @@ class TaskLangLabTests(pyloco.TestCase):
         with langlab.workdir(self.tempdir) as cwd:
 
             argv = [
-                "gcc -o %s %s" % (self.outpath, self.srcpath),
+                self.command,
                 "--cwd", cwd.path,
             ]
 
@@ -73,7 +92,7 @@ class TaskLangLabTests(pyloco.TestCase):
 
             ret, fwd = langlab.perform("run", argv=argv)
             self.assertEqual(ret, 0)
-            self.assertEqual(fwd["stdout"], greeting)
+            self.assertEqual(fwd["stdout"], "Input number is 1!")
             self.assertEqual(fwd["stderr"], "")
 
             argv = [
@@ -92,5 +111,18 @@ class TaskLangLabTests(pyloco.TestCase):
 
         from langlab.tree import Tree, Node
 
+#    def test_trace(self):
+#
+#        tracefile = os.path.join(self.tempdir, "trace.log")
+#
+#        argv = [
+#            self.command,
+#            tracefile,
+#        ]
+#
+#        ret, fwd = langlab.perform("trace", argv=argv)
+#        self.assertEqual(ret, 0)
+#        self.assertEqual(fwd["stdout"], "")
+#        self.assertEqual(fwd["stderr"], "")
 
 test_classes = (TaskLangLabTests,)

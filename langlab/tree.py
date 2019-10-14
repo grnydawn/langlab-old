@@ -14,31 +14,52 @@ class Tree(treelib.Tree):
         self.node_class = Node
         self._nodes = OrderedDict()
         self.root = None
+        self.dups = {}
 
         #super(Tree, self).__init__(**kwargs)
 
-        self.parsed = parsed
+        #self.parsed = parsed
         self.proxy  = proxy
 
         root = proxy.get_rootnode(parsed)
         tag = proxy.get_nodename(root)
         ident = proxy.get_nodeid(root)
+        data = {}; proxy.get_nodedata(root, data)
 
-        self.create_node(tag, ident, parent=None, data=root)
+        self.create_node(tag, ident, parent=None, data=data)
 
-        self._create_subnodes(self[ident])
+        self._create_subnodes(self[ident], root)
 
-    def _create_subnodes(self, parent):
+    def _create_subnodes(self, parent, pnode):
 
-        for child in self.proxy.get_subnodes(parent.data):
+        for child in self.proxy.get_subnodes(pnode):
             tag = self.proxy.get_nodename(child)
             ident = self.proxy.get_nodeid(child)
+            data = {}; self.proxy.get_nodedata(child, data)
 
-            self.create_node(tag, ident, parent=parent, data=child)
-            self._create_subnodes(self[ident])
+            if ident in self._nodes:
+                child = self._nodes[ident]
 
-    def show(self, key=False, reverse=False, **kwargs):
-        super(Tree, self).show(key=key, reverse=reverse, **kwargs)
+                if ident not in self.dups:
+                    self.dups[ident] = 0
+
+                ndups = self.dups[ident]
+                self.create_node(tag, "%d_%d" % (ident, ndups), parent=parent, data=data)
+
+                self.dups[ident] += 1
+
+            else:
+                self.create_node(tag, ident, parent=parent, data=data)
+
+            self._create_subnodes(self[ident], child)
+
+    def show(self, node=None, showdata=False, key=False, reverse=False, **kwargs):
+
+        nid = node.identifier if isinstance(node, Node) else None
+        data_property = "string" if (showdata and isinstance(node, Node)) else None
+
+        super(Tree, self).show(nid=nid, data_property=data_property, key=key,
+                               reverse=reverse, **kwargs)
 
     def tosource(self, stream=None):
 
@@ -70,6 +91,10 @@ class Proxy(object):
 
     def get_nodeid(self, node):
         raise NotImplementedError("'%s' should implement 'get_nodeid' method!"
+                                  % self.__class__.__name__)
+
+    def get_nodedata(self, node, data):
+        raise NotImplementedError("'%s' should implement 'get_nodedata' method!"
                                   % self.__class__.__name__)
 
     def get_subnodes(self, node):

@@ -10,4 +10,4 @@ class LangLab(pyloco.Manager):
     _author_email_ ='grnydawn@gmail.com'
     _license_ ='MIT'
     _url_='https://github.com/grnydawn/langlab'
-    pyloco.Manager.load_default_task("build.py", "run.py", "clean.py", "trace.py")
+    pyloco.Manager.load_default_task("build.py", "run.py", "clean.py")
