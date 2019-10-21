@@ -153,7 +153,7 @@ def compflag(command, compilers, workdir=None, includes=None, macros=None, impor
     shell = which("sh")
     strace = which("strace")
 
-    if not os.path.isfile(strace):
+    if strace is None or not os.path.isfile(strace):
         raise Exception("'strace' is not found.")
 
     # TODO: check if strace works properly
